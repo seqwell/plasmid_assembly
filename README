@@ -1,0 +1,13 @@
+source activate /Users/yanyan/anaconda3/envs/myenv
+latch login
+latch register . --nf-script main.nf --nf-execution-profile docker
+
+
+python3 /opt/unicycler/unicycler-runner.py
+
+/opt/conda/envs/fastq-assembly/bin/spades.py
+/opt/conda/envs/fastq-assembly/bin/tblastn
+/opt/conda/envs/fastq-assembly/bin/makeblastdb
+
+
+/opt/conda/envs/fastq-assembly/opt/bbmap-38.90-3/resources/nextera.fa.gz

@@ -1,0 +1,43 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "allOf": [
+        {
+            "$ref": "#/$defs/input_output_options"
+        }
+    ],
+    "title": "seqWell Assemble",
+    "$defs": {
+        "input_output_options": {
+            "title": "Input & Output Options",
+            "description": "Define the input and output data locations.",
+            "fa_icon": "fas fa-terminal",
+            "properties": {
+                "output": {
+                    "description": "Output directory or URI.",
+                    "fa_icon": "fas fa-folder-open",
+                    "format": "directory-path",
+                    "type": "string"
+                },
+                "input": {
+                    "description": "fastq file directory or URI.",
+                    "fa_icon": "fas fa-folder-open",
+                    "format": "directory-path",
+                    "type": "string"
+                },
+                "downsample": {
+                    "description": "Run name of the sequencing run to be demuxed",
+                    "type": "integer"
+                }
+                
+            },
+            "required": [
+
+                "input",
+                "output"
+                
+            ],
+            "type": "object"
+        }
+    },
+    "type": "object"
+}
