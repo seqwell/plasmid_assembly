@@ -35,7 +35,8 @@ The final output from this pipeline includes:
 4. coverage plot 
 5. GenBank file
 6. plasmid map
-7. assembly summary
+7. per base data
+8. assembly summary
 
 ![Fig1. Seqwell SNAP Plasmid Assembly Workflow](./docs/SNAP.png)
 
