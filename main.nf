@@ -48,4 +48,21 @@ workflow {
     PLASMIDMAP(gbk.collect())
     
     ANALYZE_BAM_READ_COUNT(bam_read_count_report.collect())
+    
+    
+    
+    // Pipeline Cleanup ////////////////////////////////////////////////////////////////////////////
+
+    workflow.onComplete = {
+        println "Project output directory: ${workflow.projectDir}/${params.output}"
+        println "Pipeline completed at: $workflow.complete"
+        println "Pipeline completed time duration: $workflow.duration"
+        println "Command line: $workflow.commandLine"
+        println "Execution status: ${ workflow.success ? 'OK' : 'failed' }"
+    }
+
+    workflow.onError = {
+        println "Error: Pipeline execution stopped with the following message: ${workflow.errorMessage}"
+    }
+  
 }

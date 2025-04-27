@@ -1,29 +1,30 @@
-# seqWell SNAP plasmid assembly Nextflow Pipeline
+# seqWell Plasmid Assembly From Fastq Nextflow Pipeline
 
 
-This is the Nextflow pipeline to do plasmid assembly from fastq files.
+This is the Nextflow pipeline that does plasmid assembly from fastq files.
 The pipeline uses [Unicycler](https://github.com/rrwick/Unicycler) for plasmid assembly from fastq files.
 The pipeline is as shown in the image below.
 
 The pipeline starts with fastq files and has the following steps:
 
-1. The `DOWNSAMPLE` process,  optinally downsamples fastq reads.
-2. The `BBMERGE` process performs quality filtering, merging, and normalization of paired-end reads using BBTools. 
+1. The `DOWNSAMPLE` process optionally downsamples fastq reads.
+2. The `BBMERGE` process performs fastq quality filtering, merging, and normalization of paired-end reads using BBTools. 
    First, bbduk.sh cleans the reads by trimming adapters and low-quality sequences; 
    then bbmerge-auto.sh merges overlapping read pairs; 
    finally, bbnorm.sh normalizes read coverage to reduce sequencing depth bias.
-3. The `CIRCULARIZE` process processes .gfa graph files representing genome assemblies. 
+3. The `UNICYCLER` process uses Unicycler for plasmid assembly.
+4. The `CIRCULARIZE` process processes .gfa graph files representing genome assemblies. 
    It filters out low-quality or disconnected contigs based on coverage and connectivity, 
    identifies the longest paths in the graph (potential assemblies),
    and outputs the best assembly paths in GFA, FASTA, and CSV formats.
-4. The `BWA` process indexes the provided reference FASTA (if non-empty), aligns the input FASTQ reads to it with bwa mem, 
-   converts and sorts the alignments into a BAM file, then computes overall read counts, per-base depth CSVs, and a detailed position-by-position coverage file.
-5. The `BAM_READ_COUNT` process runs bam-readcount on the BAM files using the assembled FASTA and writes the per-base read count output.
+5. The `FIX_START` process runs [Circlator](https://github.com/sanger-pathogens/circlator)’s fixstart on the input FASTA to reorient the circular genome sequence to a standardized origin.
 6. The `PLANNOTATE` process generates a GenBank (.gbk) annotation file for assembled plasmid FASTA.
-7. The `FIX_START` process runs [Circlator](https://github.com/sanger-pathogens/circlator)’s fixstart on the input FASTA to reorient the circular genome sequence to a standardized origin.
-8. The `ANALYZE_BAM_READ_COUNT` process starts with `BAM_READ_COUNT` outputs and caculates matching versus mismatching reads relative to the assembled plasid FASTA.
-9. The `PLASMIDMAP` process creates plasmid maps from GenBank annotation files.
-10. The `SUMMARIZE` process creates a summary in csv format for the assembly pipeline. 
+7. The `PLASMIDMAP` process creates plasmid maps from GenBank annotation files.
+8. The `BWA` process indexes the provided reference FASTA (if non-empty), aligns the input FASTQ reads to it with bwa mem, 
+   converts and sorts the alignments into a BAM file, then computes overall read counts, per-base depth CSVs, and a detailed position-by-position coverage file.
+9. The `BAM_READ_COUNT` process runs bam-readcount on the BAM files using the assembled FASTA and writes the per-base read count output.
+10. The `ANALYZE_BAM_READ_COUNT` process starts with `BAM_READ_COUNT` outputs and caculates matching versus mismatching reads relative to the assembled plasid FASTA.
+11. The `SUMMARIZE` process creates a summary in csv format for the assembly pipeline. 
 
 
 The final output from this pipeline includes:
@@ -97,7 +98,6 @@ nextflow run \
     -profile docker \
     main.nf \
     --input ${PWD}/path/to/fastq \
-    --plates 'example' \
     --output ${PWD}/path/to/output_dir \
     -resume  -bg 
 ```
@@ -113,10 +113,11 @@ nextflow run \
     -profile docker \
     main.nf \
     --input "${PWD}/tests/fastq" \
-    --plates 'example' \
     --output "${PWD}/test_output" \
     -resume  -bg 
 ```
+The above bash code is saved in the file *nextflow.sh*.  When you get this repo, you can do a quick test by run *bash nextflow.sh*.
+
 
 
 ## Expected Outputs
