@@ -44,7 +44,7 @@ The final output from this pipeline includes:
 ## Dependencies
 
 This pipeline requires installation of [Nextflow](https://www.nextflow.io/docs/latest/install.html).
-It also requires installation of either a containerization platform such as [Docker](https://docs.docker.com/engine/install/) or a package manager such as [conda/mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html).
+It also requires installation of a containerization platform such as [Docker](https://docs.docker.com/engine/install/).
 
 ## Docker Containers
 
